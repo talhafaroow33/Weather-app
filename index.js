@@ -38,9 +38,20 @@ app.get("/weather/:LatLong", async (request, response) => {
   const LatLongValue = LatLong.split(",");
   const [latitude, longitude] = LatLongValue;
 
-  const fetch_response = await axios.get(
+  const weather_response = await axios.get(
     `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.WEATHER_API_KEY}`
   );
-  const data = fetch_response.data;
+  const weather_data = weather_response.data;
+
+  const aq_response = await axios.get(
+    `https://u50g7n0cbj.execute-api.us-east-1.amazonaws.com/v2/latest?coordinates=${latitude}%2C${longitude}`
+  );
+  const aq_data = aq_response.data;
+
+  const data = {
+    weather_data,
+    aq_data,
+  };
+
   return response.status(200).json(data);
 });
